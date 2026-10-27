@@ -1,234 +1,76 @@
-# 🩺 DocRank — Frontend
+<div align="center">
 
-> React + TypeScript SPA for discovering, reviewing, and saving doctors. Built with Vite, TailwindCSS, and shadcn/ui. Connects to a Django REST Framework backend via JWT-authenticated Axios calls.
+# 🩺 DocRank · Web
 
-[![React](https://img.shields.io/badge/React-19-61DAFB?style=flat&logo=react&logoColor=white)](https://react.dev/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![Vite](https://img.shields.io/badge/Vite-7-646CFF?style=flat&logo=vite&logoColor=white)](https://vitejs.dev/)
-[![TailwindCSS](https://img.shields.io/badge/TailwindCSS-4-06B6D4?style=flat&logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
-[![License](https://img.shields.io/badge/License-MIT-green?style=flat)](LICENSE)
+### Find a doctor people actually trust.
+
+**React + TypeScript app for searching, rating and saving specialists across Nairobi, Kisumu and Mombasa.**
+
+[![Live Demo](https://img.shields.io/badge/🔴_Live_Demo-DocRank-0d9488?style=for-the-badge)](https://doctor-search-frontend.onrender.com)
+[![Backend](https://img.shields.io/badge/Backend_Repo-docrank--api-0f172a?style=for-the-badge&logo=github)](https://github.com/JessyWaweru/docrank-api)
+
+![React 19](https://img.shields.io/badge/React_19-61DAFB?logo=react&logoColor=black)
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite_7-646CFF?logo=vite&logoColor=white)
+![Tailwind 4](https://img.shields.io/badge/Tailwind_4-06B6D4?logo=tailwindcss&logoColor=white)
+![shadcn/ui](https://img.shields.io/badge/shadcn%2Fui-000000?logo=shadcnui&logoColor=white)
+![Radix](https://img.shields.io/badge/Radix_UI-161618?logo=radixui&logoColor=white)
+
+<sub>⏳ Free-tier hosting: the first load may take ~45s while the API wakes up.</sub>
+
+</div>
 
 ---
 
-## 📸 App Preview
+## 📸 Screenshots
 
-> Screenshots from the live app at [docrank.jbnmedia.org](https://docrank.jbnmedia.org)  
-> Each view shown in both **desktop** and **mobile**.
-
----
-
-### 🗂️ Doctor Listing
-
-| Desktop | Mobile |
+| 🗂️ Directory | 🩺 Profile & reviews |
 |:---:|:---:|
-| ![Doctor Listing Desktop](screenshots/01_doctor_listing.png) | ![Doctor Listing Mobile](screenshots/01_doctor_listing_mobile.png) |
+| ![Listing](screenshots/01_doctor_listing.png) | ![Detail](screenshots/02_doctor_detail_1_desktop.png) |
+| 🔐 **Register (OTP)** | 🔖 **Saved doctors** |
+| ![Register](screenshots/03_register_desktop.png) | ![Saved](screenshots/04_saved_desktop.png) |
 
----
+## ✨ What makes it feel fast
 
-### 🩺 Doctor Detail — Profile & Info
+- 🔍 **Debounced live search** (300ms) across name, specialty, hospital and location, so there's no request spam on every keystroke
+- 🔖 **Optimistic saves**: the heart fills instantly and the navbar badge updates live, then syncs with the API (and rolls back if the request fails)
+- 🩺 **Tabbed profile modal**: contact info, reviews and your own rating form, all without leaving the list
+- 🏠 **No login wall**: top-rated doctors are visible straight away; you only sign in to review or save
 
-| Desktop | Mobile |
-|:---:|:---:|
-| ![Doctor Detail Desktop](screenshots/02_doctor_detail_1_desktop.png) | ![Doctor Detail Mobile](screenshots/02_doctor_detail_1_mobile.png) |
+## 🔐 Auth flow
 
----
+Register → enter the **6-digit OTP** from your inbox → you're logged in with a JWT.
 
-### ⭐ Doctor Detail — Reviews Section
+An Axios interceptor attaches `Bearer <token>` to every request, and React Context (`AuthContext`, `SavedContext`) keeps the session and saved list in sync across the app. Forgotten password? Same OTP flow.
 
-| Desktop | Mobile |
-|:---:|:---:|
-| ![Doctor Reviews Desktop](screenshots/02_doctor_detail_2_desktop.png) | ![Doctor Reviews Mobile](screenshots/02_doctor_detail_2_mobile.png) |
+## 🗺️ Pages
 
----
-
-### 🔐 Register Page
-
-| Desktop | Mobile |
-|:---:|:---:|
-| ![Register Desktop](screenshots/03_register_desktop.png) | ![Register Mobile](screenshots/03_register_mobile.png) |
-
----
-
-### 🔖 Saved Doctors
-
-| Desktop | Mobile |
-|:---:|:---:|
-| ![Saved Doctors Desktop](screenshots/04_saved_desktop.png) | ![Saved Doctors Mobile](screenshots/04_saved_mobile.png) |
-
----
-
-## 🌐 Overview
-
-DocRank Frontend is the client-side interface for the DocRank platform — a doctor discovery and review system for the Kenyan healthcare market. Users can:
-
-- 🏠 **Land on a hero page** with top-rated doctors surfaced immediately — no login required
-- 🔍 **Search in real time** across name, specialty, hospital, and location with 300ms debounce
-- 🩺 **Open a full doctor profile** in a modal — contact info, tabbed reviews, and a rating form
-- ⭐ **Submit, edit, or delete reviews** with a 1–10 star rating (authenticated users only)
-- 🔖 **Save and unsave doctors** with optimistic UI updates and a live badge count in the navbar
-- 🔐 **Register with OTP email verification** and log in with username or email
-- 🔑 **Reset passwords** via an OTP-to-email flow
-
----
-
-## ✨ Tech Stack
-
-| Layer | Technology |
+| Route | Page |
 |---|---|
-| Framework | React 19 + TypeScript 5.9 |
-| Build Tool | Vite 7 |
-| Styling | TailwindCSS 4 |
-| UI Components | shadcn/ui + Radix UI |
-| Routing | React Router DOM v7 |
-| HTTP Client | Axios (JWT Bearer interceptor) |
-| Icons | Lucide React |
-| Linting | ESLint 9 + TypeScript ESLint |
+| `/` | Hero + top-rated doctors |
+| `/doctors` | Search, filter & rank |
+| `/saved` · `/my-reviews` | Your saved doctors · your reviews 🔐 |
+| `/login` · `/register` · `/forgot-password` · `/reset-password` | Auth |
 
----
-
-## 📁 Project Structure
-
-```
-src/
-├── api/
-│   └── axios.ts              # Axios instance — base URL + auto JWT header injection
-├── components/
-│   ├── DoctorCard.tsx         # Doctor listing card with save toggle
-│   ├── DoctorDetails.tsx      # Full doctor modal — profile, tabs, reviews, rating form
-│   ├── Layout.tsx             # Persistent layout wrapper with Navbar
-│   ├── Navbar.tsx             # Fixed top nav — auth-aware, saved badge count, logout dialog
-│   └── ui/                   # shadcn/ui primitives
-│       ├── alert.tsx
-│       ├── avatar.tsx
-│       ├── badge.tsx
-│       ├── button.tsx
-│       ├── card.tsx
-│       ├── dialog.tsx
-│       ├── dropdown-menu.tsx
-│       ├── input.tsx
-│       ├── label.tsx
-│       ├── progress.tsx
-│       ├── scroll-area.tsx
-│       ├── select.tsx
-│       ├── separator.tsx
-│       ├── tabs.tsx
-│       ├── textarea.tsx
-│       └── tooltip.tsx
-├── context/
-│   ├── AuthContext.tsx        # JWT state — login, logout, token persistence (localStorage)
-│   └── SavedContext.tsx       # Saved doctors IDs — optimistic toggle, badge sync
-├── pages/
-│   ├── Home.tsx              # Hero + features section + top 6 rated doctors grid
-│   ├── Doctors.tsx           # Full directory — live search with 300ms debounce
-│   ├── SavedDoctors.tsx      # User's bookmarked doctors (protected)
-│   ├── MyReviews.tsx         # User's submitted reviews (protected)
-│   ├── Login.tsx             # Login with username or email
-│   ├── Register.tsx          # Registration + OTP email verification step
-│   ├── ForgotPassword.tsx    # Request password reset OTP
-│   └── ResetPassword.tsx     # Confirm OTP + set new password
-├── lib/
-│   └── utils.ts              # cn() utility (clsx + tailwind-merge)
-├── App.tsx                   # Route definitions + ProtectedRoute wrapper
-└── main.tsx                  # App entry point
-```
-
----
-
-## 🗺️ Routes
-
-| Route | Access | Page | Description |
-|---|---|---|---|
-| `/` | Public | `Home.tsx` | Hero, feature cards, top 6 doctors |
-| `/doctors` | Public | `Doctors.tsx` | Full directory with live search |
-| `/saved` | 🔒 Protected | `SavedDoctors.tsx` | Bookmarked doctors list |
-| `/my-reviews` | 🔒 Protected | `MyReviews.tsx` | User's submitted reviews |
-| `/login` | Public | `Login.tsx` | Login with username or email |
-| `/register` | Public | `Register.tsx` | Register + OTP verification |
-| `/forgot-password` | Public | `ForgotPassword.tsx` | Request password reset OTP |
-| `/reset-password` | Public | `ResetPassword.tsx` | Confirm OTP + new password |
-
-> Protected routes redirect to `/login` if the user is not authenticated.
-
----
-
-## 🔐 Auth Flow
-
-```
-Register  → OTP emailed → Verify OTP → JWT issued → Logged in
-Login     → JWT access + refresh tokens → stored in localStorage
-Forgot    → OTP emailed → Confirm OTP + new password → redirect to login
-```
-
-JWT tokens are stored in `localStorage` and automatically attached to every Axios request via a request interceptor. On app load, `AuthContext` checks `localStorage` to restore the session without requiring a re-login.
-
----
-
-## 💾 Saved Doctors — Optimistic UI
-
-The `SavedContext` uses **optimistic updates** — the heart icon toggles instantly in the UI before the API call completes. If the API call fails, the state is reverted. The navbar heart icon shows a live badge count of saved doctors.
-
----
-
-## ⚙️ Setup & Installation
-
-### Prerequisites
-
-- Node.js 18+
-- npm
-- Backend API running (see [DOCTOR_SEARCH_BACKEND](https://github.com/JessyWaweru/DOCTOR_SEARCH_BACKEND))
-
-### Installation
+## 🚀 Run it locally
 
 ```bash
-# Clone the repo
-git clone https://github.com/JessyWaweru/DOCTOR_SEARCH_FRONTEND.git
-cd DOCTOR_SEARCH_FRONTEND
-
-# Install dependencies
+git clone https://github.com/JessyWaweru/docrank-web.git
+cd docrank-web
 npm install
-
-# Start development server
-npm run dev
+npm run dev                # → http://localhost:5173
 ```
 
-App runs at `http://localhost:5173` by default.
+Set `VITE_API_URL` to your backend (defaults to `http://localhost:8000/api`), and run [docrank-api](https://github.com/JessyWaweru/docrank-api) alongside it.
 
 ---
 
-## 🌍 Environment Variables
+<div align="center">
 
-Create a `.env` file in the project root:
+**Built by Jessy Bryan Waweru**: actuary by training, full-stack engineer by obsession.
 
-```env
-VITE_API_URL=http://localhost:8000/api
-```
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?logo=linkedin&logoColor=white)](https://www.linkedin.com/in/jessy-waweru-b8051a288)
+[![Email](https://img.shields.io/badge/Email-EA4335?logo=gmail&logoColor=white)](mailto:bryanjessywaweru@gmail.com)
+[![GitHub](https://img.shields.io/badge/More_projects-181717?logo=github)](https://github.com/JessyWaweru)
 
-In production, set `VITE_API_URL` to your deployed Render backend URL. This is injected at build time by Vite — the Axios instance falls back to `http://localhost:8000/api` if the variable is not set.
-
----
-
-## 📜 Scripts
-
-| Command | Description |
-|---|---|
-| `npm run dev` | Start Vite dev server with HMR |
-| `npm run build` | Type-check + production build |
-| `npm run preview` | Preview production build locally |
-| `npm run lint` | Run ESLint |
-
----
-
-## 👤 Author
-
-**Jessy Waweru**
-[github.com/JessyWaweru](https://github.com/JessyWaweru)
-
----
-
-## 🔗 Links
-
-| | |
-|---|---|
-| 🔧 Backend repo | [DOCTOR_SEARCH_BACKEND](https://github.com/JessyWaweru/DOCTOR_SEARCH_BACKEND) |
-| 🖥️ Frontend repo | [DOCTOR_SEARCH_FRONTEND](https://github.com/JessyWaweru/DOCTOR_SEARCH_FRONTEND) |
-| 🌍 Live app | [docrank.jbnmedia.org](https://docrank.jbnmedia.org) |
+</div>
